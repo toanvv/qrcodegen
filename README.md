@@ -24,6 +24,7 @@ To build and deploy your application for the first time, run the following in yo
 ```bash
 sam build --use-container
 sam deploy --guided
+aws s3 mb smocca-qrimage-prod
 ```
 
 The first command will build the source of your application. The second command will package and deploy your application to AWS, with a series of prompts:
@@ -44,33 +45,7 @@ Build your application with the `sam build --use-container` command.
 qrgen$ sam build --use-container
 ```
 
-The SAM CLI installs dependencies defined in `hello_world/requirements.txt`, creates a deployment package, and saves it in the `.aws-sam/build` folder.
-
-Test a single function by invoking it directly with a test event. An event is a JSON document that represents the input that the function receives from the event source. Test events are included in the `events` folder in this project.
-
-Run functions locally and invoke them with the `sam local invoke` command.
-
-```bash
-qrgen$ sam local invoke HelloWorldFunction --event events/event.json
-```
-
 The SAM CLI can also emulate your application's API. Use the `sam local start-api` to run the API locally on port 3000.
-
-```bash
-qrgen$ sam local start-api
-qrgen$ curl http://localhost:3000/
-```
-
-The SAM CLI reads the application template to determine the API's routes and the functions that they invoke. The `Events` property on each function's definition includes the route and method for each path.
-
-```yaml
-      Events:
-        HelloWorld:
-          Type: Api
-          Properties:
-            Path: /gen
-            Method: get
-```
 
 ## Fetch, tail, and filter Lambda function logs
 
