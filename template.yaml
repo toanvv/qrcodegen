@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  qrgen for smocca
+Globals:
+  Function:
+    Timeout: 5
+
+Resources:
+  QrGenFunction:
+    Type: AWS::Serverless::Function
+    TracingConfig:
+      Mode: Active
+    Properties:
+      CodeUri: gen/
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /gen
+            Method: get
+      Environment:
+        Variables:
+          QR_BUCKET_NAME: "smocca-qrimage-prod"
+
+Outputs:
+  QrApi:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/gen/"
