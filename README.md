@@ -22,9 +22,49 @@ To use the SAM CLI, you need the following tools.
 To build and deploy your application for the first time, run the following in your shell:
 
 ```bash
+export BUCKET=smocca-qrimage-prod
+aws s3 mb $BUCKET
 sam build --use-container
 sam deploy --guided
-aws s3 mb smocca-qrimage-prod
+```
+
+```bash
+# get function arn, you may need to install "jq"
+export FUNCTION_ARN=$(aws lambda get-function --function-name QrGenFunction  --region ap-northeast-1 | jq ".Configuration|.FunctionArn")
+
+
+cat > temp.policy <<"EOF"
+{
+  "Id": "Policy1603099784419",
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1603099780850",
+      "Action": [
+        "s3:DeleteObject",
+        "s3:DeleteObjectTagging",
+        "s3:GetBucketAcl",
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:PutObjectAcl"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::$BUCKET/*",
+      "Principal": {
+        "AWS": [
+          "$FUNCTION_ARN"
+        ]
+      }
+    }
+  ]
+}
+
+# replace bucket and lambda function ARN
+envsubst < temp.policy > policy.json
+
+# put policy
+aws s3api put-bucket-policy --bucket $BUCKET --region ap-northeast-1 --policy file://policy.json
+EOF
 ```
 
 The first command will build the source of your application. The second command will package and deploy your application to AWS, with a series of prompts:

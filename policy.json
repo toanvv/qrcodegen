@@ -1,0 +1,25 @@
+{
+  "Id": "Policy1603099784419",
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1603099780850",
+      "Action": [
+        "s3:DeleteObject",
+        "s3:DeleteObjectTagging",
+        "s3:GetBucketAcl",
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:PutObjectAcl"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::$BUCKET/*",
+      "Principal": {
+        "AWS": [
+          "$FUNCTION_ARN"
+        ]
+      }
+    }
+  ]
+}
+
