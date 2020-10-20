@@ -67,7 +67,6 @@ envsubst < temp.policy > policy.json
 
 # put policy
 aws s3api put-bucket-policy --bucket $BUCKET --region ap-northeast-1 --policy file://policy.json
-EOF
 ```
 
 The first command will build the source of your application. The second command will package and deploy your application to AWS, with a series of prompts:
