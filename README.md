@@ -58,7 +58,10 @@ cat > temp.policy <<"EOF"
     }
   ]
 }
+EOF
+```
 
+```
 # replace bucket and lambda function ARN
 envsubst < temp.policy > policy.json
 
